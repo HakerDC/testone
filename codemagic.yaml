@@ -4,6 +4,9 @@ workflows:
     working_directory: .  # Root of the repository
     environment:
       java: 11 # Request Java 11
+      # Explicitly add wrapper jar to classpath environment variable
+      vars:
+         GRADLE_OPTS: "-Djava.class.path=gradle/wrapper/gradle-wrapper.jar"
     scripts:
       - name: Check files
         script: |
@@ -16,7 +19,10 @@ workflows:
       - name: Build Android App
         script: |
           chmod +x ./gradlew
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          # Try running gradle directly using the wrapper jar in classpath
+          java -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain assembleDebug --no-daemon --stacktrace
+          # Fallback to standard gradlew command if the above fails
+          # ./gradlew assembleDebug --no-daemon --stacktrace
     artifacts:
       - app/build/outputs/apk/debug/*.apk
     publishing:
