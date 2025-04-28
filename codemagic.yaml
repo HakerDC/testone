@@ -5,18 +5,23 @@ workflows:
     environment:
       java: 11 # Request Java 11
     scripts:
+      - name: List root directory
+        script: ls -la
+      - name: List wrapper directory
+        script: ls -la gradle/wrapper
+      - name: Check gradlew permissions
+        script: chmod +x ./gradlew # Ensure gradlew is executable
+      - name: Test Gradle Wrapper JAR directly
+        script: java -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain -v
+        ignore_failure: true # Ignore if this test fails, proceed to main build
       - name: Set up local properties
-        script: |
-          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+        script: echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
       - name: Build Android App
-        script: |
-          chmod +x ./gradlew
-          ./gradlew assembleDebug --no-daemon
+        script: ./gradlew assembleDebug --no-daemon --stacktrace # Add --stacktrace for more details
     artifacts:
       - app/build/outputs/apk/debug/*.apk
     publishing:
       email:
-        recipients:
           - aapex873@gmail.com # Replace with your email address
         notify:
           success: true
