@@ -1,3 +1,23 @@
-git add codemagic.yaml
-git commit -m 'Add first workflow'
-git push
+workflows:
+  android-app:
+    name: Android App Build
+    working_directory: AndroidApp  # Specify the project path here
+    environment:
+      android_sdk_version: "34" # Match the compileSdk in build.gradle
+      java_version: "11" # Use Java 11
+    scripts:
+      - name: Set up local properties
+        script: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+      - name: Build Android App
+        script: |
+          ./gradlew assembleDebug --no-daemon
+    artifacts:
+      - app/build/outputs/apk/debug/*.apk
+    publishing:
+      email:
+        recipients:
+          - your_email@example.com # Replace with your email address
+        notify:
+          success: true
+          failure: true
