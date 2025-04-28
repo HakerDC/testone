@@ -1,10 +1,10 @@
 workflows:
   android-app:
     name: Android App Build
-    working_directory: AndroidApp  # Specify the project path here
+    # Update this line to match the folder structure in GitHub
+    working_directory: ubuntu/AndroidApp 
     environment:
-      vars:
-        JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
+      java: 11 # Request Java 11
     scripts:
       - name: Set up local properties
         script: |
