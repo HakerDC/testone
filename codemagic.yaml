@@ -3,8 +3,8 @@ workflows:
     name: Android App Build
     working_directory: AndroidApp  # Specify the project path here
     environment:
-      android_sdk_version: "34" # Match the compileSdk in build.gradle
-      java_version: "11" # Use Java 11
+      vars:
+        JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
     scripts:
       - name: Set up local properties
         script: |
